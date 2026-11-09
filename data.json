@@ -1,10 +1,75 @@
 {
-  "updatedAt": null,
-  "data": {},
+  "updatedAt": "2026-11-09T02:20:03.382840+00:00",
+  "data": {
+    "spDraw": 5.654,
+    "earningsYield": null,
+    "treasuryYield": 4.859,
+    "aiDraw": 18.891,
+    "kospiDraw": 43.844,
+    "kospiForwardPER": null,
+    "semiExportM1": null,
+    "semiExportM2": null,
+    "semiExportM3": null,
+    "semiExportM4": null,
+    "memoryPriceM1": null,
+    "memoryPriceM2": null,
+    "goldDraw": 22.185,
+    "cbBuyingMaintained": null,
+    "fedCutPivot": null,
+    "usRatesRising": null,
+    "cbBuyingDeclining": null,
+    "portfolioDraw": null
+  },
   "meta": {
-    "status": "not_collected",
-    "sources": {},
+    "status": "partial",
+    "sources": {
+      "spDraw": {
+        "ticker": "^GSPC",
+        "marketDate": "2026-11-06",
+        "definition": "max drawdown from closing-price high within last 1 year"
+      },
+      "aiDraw": {
+        "ticker": "AIQ",
+        "marketDate": "2026-11-06",
+        "definition": "max drawdown from closing-price high within last 1 year"
+      },
+      "kospiDraw": {
+        "ticker": "^KS11",
+        "marketDate": "2026-11-09",
+        "definition": "max drawdown from closing-price high within last 1 year"
+      },
+      "goldDraw": {
+        "ticker": "GC=F",
+        "marketDate": "2026-11-08",
+        "definition": "max drawdown from closing-price high within last 1 year"
+      },
+      "treasuryYield": {
+        "ticker": "^TNX",
+        "marketDate": "2026-11-06",
+        "definition": "US 10y Treasury yield (%)"
+      }
+    },
     "issues": [],
-    "notes": ["No automatic market snapshot has been collected. Run GitHub Actions to generate real observations."]
+    "integrations": {
+      "macro-dashboard": {
+        "status": "reachable",
+        "url": "https://kangdy9801.github.io/macro-dashboard/data/market.json",
+        "contentType": "application/json; charset=utf-8",
+        "mapping": "reference only; field schema and publication date must be verified"
+      },
+      "kr-trade-monitor": {
+        "status": "reachable",
+        "url": "https://kangdy9801.github.io/kr-trade-monitor/assets/seed.js",
+        "contentType": "application/javascript; charset=utf-8",
+        "mapping": "reference only; field schema and publication date must be verified"
+      }
+    },
+    "notes": [
+      "1-year closing-price high is not lifetime all-time high",
+      "AIQ is an AI equity proxy; GC=F is USD gold futures, not Korean KRW gold spot",
+      "Forward earnings yield, next-year CAPEX guidance and private portfolio weights are NOT inferred",
+      "Reference feeds are connectivity checks, not unvalidated automatic trading inputs",
+      "Public GitHub Pages cannot synchronise browser-private PDF uploads across devices"
+    ]
   }
 }
