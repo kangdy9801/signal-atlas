@@ -1,0 +1,10 @@
+{
+  "updatedAt": null,
+  "data": {},
+  "meta": {
+    "status": "not_collected",
+    "sources": {},
+    "issues": [],
+    "notes": ["No automatic market snapshot has been collected. Run GitHub Actions to generate real observations."]
+  }
+}
