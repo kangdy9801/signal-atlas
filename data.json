@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-11-09T06:36:49.479408+00:00",
+  "updatedAt": "2026-11-09T20:55:14.368726+00:00",
   "data": {
     "spDraw": 5.654,
     "earningsYield": 5.632,
     "treasuryYield": 4.86,
-    "aiDraw": 18.891,
-    "kospiDraw": 44.863,
+    "aiDraw": 16.139,
+    "kospiDraw": 44.488,
     "kospiForwardPER": null,
     "semiExportM1": 178.8,
     "semiExportM2": 209.0,
@@ -14,7 +14,7 @@
     "memoryPriceM1": 3.226,
     "memoryPriceM2": 4.167,
     "memoryTwoMonthDecline": false,
-    "goldDraw": 24.966,
+    "goldDraw": 25.188,
     "cbBuyingMaintained": null,
     "fedCutPivot": false,
     "fedCutCount": 0,
@@ -40,7 +40,7 @@
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
         "marketDate": "2026-11-09",
         "definition": "gold USD close; drawdown from highest closing price in trailing 365 days",
-        "currentClose": 4133.2998,
+        "currentClose": 4121.1001,
         "peakClose": 5508.6001,
         "originalSource": "Yahoo Finance GCZ26.CMX",
         "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
@@ -113,17 +113,17 @@
       "aiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "AIQ",
-        "marketDate": "2026-11-06",
+        "marketDate": "2026-11-09",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 56.89,
+        "currentClose": 58.82,
         "peakClose": 70.14
       },
       "kospiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "^KS11",
-        "marketDate": "2026-11-09",
+        "marketDate": "2026-11-06",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 5025.5098,
+        "currentClose": 5059.6899,
         "peakClose": 9114.5498
       },
       "earningsYield": {
@@ -139,7 +139,7 @@
       "fedCutPivot": {
         "provider": "FRED (St. Louis Fed)",
         "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU",
-        "marketDate": "2026-11-08",
+        "marketDate": "2026-11-09",
         "definition": "Cuts to the fed funds target upper bound since the most recent hike. 1 = watch, 2+ = pivot",
         "targetUpper": 4.0,
         "lastHike": "2026-09-17",
@@ -150,7 +150,7 @@
       "fedCutCount": {
         "provider": "FRED (St. Louis Fed)",
         "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU",
-        "marketDate": "2026-11-08",
+        "marketDate": "2026-11-09",
         "definition": "Cuts to the fed funds target upper bound since the most recent hike. 1 = watch, 2+ = pivot",
         "targetUpper": 4.0,
         "lastHike": "2026-09-17",
@@ -166,7 +166,7 @@
       "macro-dashboard": {
         "status": "mapped",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "sourceUpdated": "2026-11-09T06:07+00:00",
+        "sourceUpdated": "2026-11-09T07:00+00:00",
         "availableSeries": [
           "dxy",
           "fng",
