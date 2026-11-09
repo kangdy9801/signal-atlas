@@ -66,11 +66,13 @@ kr_bad['trade']['memory']['nand']=[7,6.5,6.7]
 fields,_,_,_=collect.kr_to_fields('window.KTM_SEED = '+json.dumps([kr_bad])+';',TODAY)
 assert fields['memoryTwoMonthDecline'] is False
 
+def offline(url, max_bytes=None):raise RuntimeError('offline test')
+
 # Full end-to-end data merge into data.json without network; unprovided fields remain null.
 with tempfile.TemporaryDirectory() as d:
     def fetcher(name):return (macro,'macro-data') if name=='macro-dashboard' else (kr_source,'kr-data')
     def fallback(ticker,today):return (31.0,TODAY.isoformat(),68,100) if ticker=='AIQ' else (26.0,TODAY.isoformat(),74,100)
-    result=collect.collect(now=NOW,fetcher=fetcher,fallback=fallback,output=Path(d)/'data.json')
+    result=collect.collect(now=NOW,fetcher=fetcher,fallback=fallback,output=Path(d)/'data.json',http=offline)
     data=result['data']
     assert data['spDraw']==30 and data['goldDraw']==25 and data['treasuryYield']==3.4
     assert data['aiDraw']==31 and data['kospiDraw']==26
@@ -85,7 +87,7 @@ with tempfile.TemporaryDirectory() as d:
 with tempfile.TemporaryDirectory() as d:
     def failing(name):raise RuntimeError('upstream unavailable')
     def failfallback(ticker,today):raise RuntimeError('market unavailable')
-    result=collect.collect(now=NOW,fetcher=failing,fallback=failfallback,output=Path(d)/'data.json')
+    result=collect.collect(now=NOW,fetcher=failing,fallback=failfallback,output=Path(d)/'data.json',http=offline)
     assert result['meta']['status']=='unavailable'
     assert all(value is None for value in result['data'].values())
 

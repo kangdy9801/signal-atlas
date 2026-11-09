@@ -1,4 +1,4 @@
-# Signal Atlas v4.0 — GitHub Pages 자동 투자지표 모니터
+# Signal Atlas v4.1 — GitHub Pages 자동 투자지표 모니터
 
 **5개 투자 전략 · 큰 글씨 · 두 대시보드 실제 수치 연동 · AI 기업 PDF CAPEX 분석**  
 **자동 매매 없음 / 텔레그램 알림 없음 / 유료 API 키 필요 없음**
@@ -29,6 +29,7 @@ signal-atlas/
 │   ├── strategy.js             # 5개 자산의 3값 논리(True/False/미확인)
 │   └── styles.css              # 커진 글자, 반응형 UI
 ├── collect.py                  # 공개 두 소스 실제 읽기 + 가격 보조 수집
+├── collect_extra.py            # v4.1: FactSet 선행 P/E · FRED 기준금리 · WGC 중앙은행 금
 ├── data.json                   # 초기에는 미수집, Actions가 이후 갱신
 ├── requirements.txt           # yfinance 보조 수집용
 ├── .github/workflows/update-market.yml
@@ -84,15 +85,22 @@ signal-atlas/
 
 **중요한 제한:** KR Trade Monitor에 PDF를 업로드한 내용은 그 사이트의 브라우저 저장소에만 저장됩니다. 사용자가 그 사이트에서 **`seed.js 만들기` → 원본 KR 저장소 `assets/seed.js` 커밋**을 완료해야 Signal Atlas가 새 보고월 값을 자동으로 가져옵니다. 두 사이트는 서로 수정·삭제하지 않습니다.
 
+### v4.1 추가 자동 연결
+
+| 원본 | Signal Atlas 필드 | 규칙 |
+| --- | --- | --- |
+| [FactSet Earnings Insight](https://insight.factset.com/) 주간 PDF (`EarningsInsight_MMDDYY.pdf`) | `earningsYield` | 리포트의 선행 12M P/E와 종가로 선행 EPS 역산 → 최신 S&P500 종가로 나눠 **매일** 이익수익률 계산. 14일 넘은 리포트는 사용 안 함 |
+| [FRED DFEDTARU](https://fred.stlouisfed.org/series/DFEDTARU) (기준금리 상단) | `fedCutPivot`, `fedCutCount` | 마지막 인상 이후 인하 횟수. **1회 = 관심 단계(전환 아님), 2회 이상 = 인하 전환** |
+| [WGC Gold Demand Trends](https://www.gold.org/goldhub/research/gold-demand-trends) 중앙은행 페이지 | `cbBuyingMaintained`, `cbBuyingDeclining` | 최신 분기 순매입을 **전년 동기**와 비교. 유지 = 순매입 > 0 그리고 전년 동기 이상, 감소 = 전년 동기 미만 |
+
+전년 동기 값은 당시 처음 발표된 수치이며, WGC가 이후 수정한 값과 다를 수 있습니다.
+
 ### 직접 입력으로 남는 지표
 
-이 두 원본 파일에는 다음 결정에 필수적인 수치가 없습니다. **별도 검증된 데이터 공급원을 연결하기 전까지 비워 둡니다**.
-
-- S&P500 **선행 PER 기반 이익수익률**
-- **KOSPI 선행 PER**
-- **중앙은행 금 매입 추세**와 Fed 기준금리 **인하 전환** 판정
+- **KOSPI 12개월 선행 PER**: 하단·상단 **범위**와 **기준일**로 입력. 상단 ≤ 8배면 충족, 하단 > 8배면 미충족, 8배에 걸치면 판단 보류. 기준일이 60일을 넘으면 조건 옆에 '갱신 권장'을 표시
+- **미국 금리 지속 상승** (정의 확정 후 자동화 예정)
 - 사용자의 **투자자산 전체 고점 대비 하락률**
-- 4대 빅테크 다음 해 CAPEX 계획의 검증된 정량/정성 근거(기업 PDF마다 개별 검증 필요)
+- 4대 빅테크 다음 해 CAPEX 계획의 검증된 근거(기업 PDF마다 개별 검증 필요)
 
 웹사이트 **시장 지표 입력**에서 이 값들을 입력하면, 자동 시장 데이터와 합쳐 조건을 재계산합니다. 수동값은 자동값보다 우선합니다.
 
@@ -137,6 +145,7 @@ node tests/test-parser.js
 node tests/test-q3-filings.js
 node tests/test-strategy.js
 python tests/test-collector.py
+python tests/test-extra.py
 ```
 
 `tests/test-collector.py`는 **외부 네트워크 없이** 원본 저장소에 공개된 필드 계약과 같은 샘플로 파싱·자료 지연·보류 처리를 검증합니다. 이 배포 패키지의 자동 수집이 사용자의 GitHub 계정에서 이미 실행됐다는 의미는 아닙니다.

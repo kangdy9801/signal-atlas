@@ -46,22 +46,38 @@ function capexSummary(docs){
    positiveExecution:rows.filter(x=>x.doc?.trend==='expanding').length
  };
 }
+function perRange(d,limit,now){
+ const single=number(d.kospiForwardPER)?d.kospiForwardPER:null;
+ let lo=number(d.kospiForwardPERLow)?d.kospiForwardPERLow:null,hi=number(d.kospiForwardPERHigh)?d.kospiForwardPERHigh:null;
+ if(lo===null&&hi===null&&single!==null)lo=hi=single;
+ if(lo===null)lo=hi;if(hi===null)hi=lo;
+ if(lo===null)return {passed:null,text:'',low:null,high:null,ageDays:null};
+ if(lo>hi)[lo,hi]=[hi,lo];
+ const passed=hi<=limit?true:lo>limit?false:null;
+ let age=null;
+ if(typeof d.kospiPERAsOf==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d.kospiPERAsOf)){const t=new Date(d.kospiPERAsOf+'T00:00:00');if(Number.isFinite(t.getTime()))age=Math.floor((now-t)/86400000);}
+ const range=lo===hi?`${lo}배`:`${lo}~${hi}배`;
+ const asof=age===null?' · 기준일 미입력':age>60?` · 기준일 ${d.kospiPERAsOf} (${age}일 경과, 갱신 권장)`:` · 기준일 ${d.kospiPERAsOf}`;
+ const straddle=passed===null?' · 범위가 기준에 걸쳐 판단 보류':'';
+ return {passed,text:` (입력 ${range}${asof}${straddle})`,low:lo,high:hi,ageDays:age};
+}
 function evaluate(data={},docs=[],thresholds={},now=new Date()){
  const t={...DEFAULTS,...thresholds},d=data,capex=capexSummary(docs);
  const spread=number(d.earningsYield)&&number(d.treasuryYield)?d.earningsYield-d.treasuryYield:null;
  const ex=[d.semiExportM1,d.semiExportM2,d.semiExportM3,d.semiExportM4];
  const semislow=ex.every(number)?ex.slice(1).every((v,i)=>v<ex[i]):null;
  const memfall=typeof d.memoryTwoMonthDecline==='boolean'?d.memoryTwoMonthDecline:(number(d.memoryPriceM1)&&number(d.memoryPriceM2)?d.memoryPriceM1<0&&d.memoryPriceM2<0:null);
+ const per=perRange(d,t.kospiPER,now instanceof Date?now:new Date(now));
  const stages=[t.cash1,t.cash2,t.cash3].map((v,i)=>({level:i+1,draw:v,passed:ge(d.portfolioDraw,v)}));
  const rules={
   sp:{buy:[item(`고점 대비 ${t.spDraw}% 이상 하락`,ge(d.spDraw,t.spDraw)),item(`주식 예상 이익수익률 − 미국 국채 금리 ≥ ${t.spSpreadBuy}%p`,ge(spread,t.spSpreadBuy))],sell:[item(`이익수익률 − 국채금리 ≤ ${t.spSpreadSell}%p`,le(spread,t.spSpreadSell))]},
   ai:{buy:[item(`AI 주식 바스켓 고점 대비 ${t.aiDraw}% 이상 하락`,ge(d.aiDraw,t.aiDraw)),item(`4대 기업의 차기년도 AI·CAPEX 투자 유지 확인`,capex.maintained)],sell:[item(`4대 기업 중 ${t.capexCuts}곳 이상 차기년도 CAPEX 축소 확인 (검증 완료 ${capex.cuts}곳)`,capex.cuts>=t.capexCuts?true:capex.known===4?false:null)]},
-  kr:{buy:[item(`코스피 고점 대비 ${t.kospiDraw}% 이상 하락`,ge(d.kospiDraw,t.kospiDraw)),item(`코스피 예상 PER ≤ ${t.kospiPER}배`,le(d.kospiForwardPER,t.kospiPER))],sell:[item('반도체 수출 증가율 3회 연속 둔화',semislow),item('DDR5·NAND 가격 각각 2개월 연속 하락 (공개 보도자료 기준)',memfall)]},
-  gold:{buy:[item(`달러 금값 고점 대비 ${t.goldDraw}% 이상 하락`,ge(d.goldDraw,t.goldDraw)),item('중앙은행 매입 유지 또는 미국 금리 인하 전환',or(boolean(d.cbBuyingMaintained),boolean(d.fedCutPivot)))],sell:[item('미국 금리 지속 상승',boolean(d.usRatesRising)),item('중앙은행 금 매입 감소',boolean(d.cbBuyingDeclining))]},
+  kr:{buy:[item(`코스피 고점 대비 ${t.kospiDraw}% 이상 하락`,ge(d.kospiDraw,t.kospiDraw)),item(`코스피 12개월 선행 PER ≤ ${t.kospiPER}배${per.text}`,per.passed)],sell:[item('반도체 수출 증가율 3회 연속 둔화',semislow),item('DDR5·NAND 가격 각각 2개월 연속 하락 (공개 보도자료 기준)',memfall)]},
+  gold:{buy:[item(`달러 금값 고점 대비 ${t.goldDraw}% 이상 하락`,ge(d.goldDraw,t.goldDraw)),item(`중앙은행 매입 유지(전년 동기 대비) 또는 미국 금리 인하 전환(2회 이상)${d.fedCutPivot!==true&&d.fedCutCount===1?' · 인하 1회: 관심 단계':''}`,or(boolean(d.cbBuyingMaintained),boolean(d.fedCutPivot)))],sell:[item('미국 금리 지속 상승',boolean(d.usRatesRising)),item('중앙은행 금 매입 감소 (전년 동기 대비)',boolean(d.cbBuyingDeclining))]},
   cash:{buy:[item(`투자자산 전체 고점 대비 ${t.cash1}% 이상 하락 (1차 현금 투입 검토)`,ge(d.portfolioDraw,t.cash1))],sell:[item(`이익수익률 − 국채금리 ≤ ${t.spSpreadSell}%p (현금 확보 검토)`,le(spread,t.spSpreadSell))]}
  };
  const result={};for(const asset of ASSETS){const x=rules[asset.id];result[asset.id]={...x,buySignal:and(...x.buy.map(v=>v.passed)),sellSignal:and(...x.sell.map(v=>v.passed))};}
- return {rules:result,spread,capex,stages,thresholds:t};
+ return {rules:result,spread,capex,stages,kospiPER:per,thresholds:t};
 }
 return {COMPANY_KEYS,DEFAULTS,ASSETS,evaluate,capexSummary,getLatestDocs,and,or,ratio};
 });

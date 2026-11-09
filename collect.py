@@ -13,6 +13,8 @@ import urllib.request
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
+import collect_extra as extra
+
 ROOT = Path(__file__).resolve().parent
 URLS = {
     'macro-dashboard': [
@@ -31,7 +33,7 @@ FIELDS = [
     'spDraw', 'earningsYield', 'treasuryYield', 'aiDraw', 'kospiDraw', 'kospiForwardPER',
     'semiExportM1', 'semiExportM2', 'semiExportM3', 'semiExportM4',
     'memoryPriceM1', 'memoryPriceM2', 'memoryTwoMonthDecline',
-    'goldDraw', 'cbBuyingMaintained', 'fedCutPivot', 'usRatesRising',
+    'goldDraw', 'cbBuyingMaintained', 'fedCutPivot', 'fedCutCount', 'usRatesRising',
     'cbBuyingDeclining', 'portfolioDraw',
 ]
 
@@ -252,7 +254,7 @@ def fallback_drawdown(ticker, today):
     return price_drawdown(rows, today)
 
 
-def collect(now=None, fetcher=None, fallback=fallback_drawdown, output=None):
+def collect(now=None, fetcher=None, fallback=fallback_drawdown, output=None, http=None, pdf_to_text=None):
     """Run ingestion. fetcher may be injected for offline contract tests."""
     now = now or datetime.now(timezone.utc)
     today = now.date()
@@ -284,8 +286,26 @@ def collect(now=None, fetcher=None, fallback=fallback_drawdown, output=None):
             }
         except Exception as error:
             issues.append(f'fallback {ticker}: {str(error)[:150]}')
-    # No substitution for forward PER, earnings yield, official Fed policy pivot,
-    # central bank purchases, private portfolio NAV, or 2027 CAPEX guidance.
+    # v4.1 extra public sources: FactSet forward P/E, FRED fed target, WGC central bank gold.
+    http = http or extra.http_get
+    spx = sources.get('spDraw') or {}
+    spx_day = iso_day(spx.get('marketDate'))
+    jobs = [
+        ('factset', lambda: extra.collect_factset(today, http, pdf_to_text or extra.pdf_text, spx.get('currentClose'), spx_day)),
+        ('fred', lambda: extra.collect_fred(today, http)),
+        ('wgc', lambda: extra.collect_wgc(today, http)),
+    ]
+    for name, job in jobs:
+        try:
+            fields, detail, field_errors, more = job()
+            data.update(fields)
+            sources.update(detail)
+            issues.extend(f'{name}: {e}' for e in field_errors if name != 'factset')
+            integrations[name] = dict({'status': 'mapped'}, **more)
+        except Exception as error:
+            integrations[name] = {'status': 'unavailable', 'issue': str(error)[:240]}
+            issues.append(f'{name}: {str(error)[:200]}')
+    # Still no substitution for KOSPI forward PER, private portfolio NAV, or next-year CAPEX guidance.
     status = 'partial' if sources else 'unavailable'
     result = {
         'updatedAt': now.isoformat(),
@@ -298,7 +318,10 @@ def collect(now=None, fetcher=None, fallback=fallback_drawdown, output=None):
                 'Gold futures contract rolls can affect the drawdown series.',
                 'KR exports and fixed memory prices use the latest published upstream seed.js; local-only PDFs are not visible.',
                 'Two-month memory decline requires both DDR5 and NAND to decline in BOTH months.',
-                'Forward stock earnings yield, KOSPI forward PER, central-bank gold purchases and portfolio NAV remain unverified; no invented values.',
+                'S&P500 earnings yield = FactSet forward 12M EPS (report close / forward P/E) / latest S&P500 close.',
+                'Fed pivot: cuts since last hike. 1 cut = watch only, 2+ cuts = pivot (FRED DFEDTARU).',
+                'Central bank gold: latest WGC quarter vs. same quarter a year earlier.',
+                'KOSPI forward PER, US rates rising and portfolio NAV remain manual; no invented values.',
                 'No Telegram notifications and no investment transactions.',
             ],
         },
