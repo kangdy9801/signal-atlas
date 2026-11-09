@@ -10,11 +10,11 @@ const fmt=(x,dec=1)=>n(x)?x.toLocaleString('ko-KR',{maximumFractionDigits:dec,mi
 const b=x=>n(x)?'$'+fmt(x/1000,2)+'B':'—';
 const pct=x=>n(x)?(x>0?'+':'')+fmt(x,1)+'%':'—';
 const dateText=ts=>ts?new Date(ts).toLocaleString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'미확인';
-const STORE='signal-atlas-capex-v2.1';
+const STORE='signal-atlas-capex-v2.1'; // keep v3 local PDF records without a migration
 const GROUPS=[
  {name:'① 미국 S&P500',desc:'S&P500 낙폭 + 국채 대비 예상 이익수익률',items:[['spDraw','S&P500 고점 대비 하락률 (%)','number','20'],['earningsYield','S&P500 예상 이익수익률 (%)','number','6'],['treasuryYield','미국 국채 10년물 금리 (%)','number','3']]},
  {name:'② AI 관련 주식',desc:'낙폭은 시세, 투자 유지·축소는 기업 PDF 기록에서 자동 계산',items:[['aiDraw','AI 주식 바스켓 고점 대비 하락률 (%)','number','30']]},
- {name:'③ 한국 커버드콜',desc:'커버드콜은 상승이 제한될 수 있고 하락 손실이 가능합니다.',items:[['kospiDraw','코스피 고점 대비 하락률 (%)','number','25'],['kospiForwardPER','코스피 예상 PER (배)','number','8'],['semiExportM1','반도체 수출 증가율: 3개월 전 (%)','number','15'],['semiExportM2','반도체 수출 증가율: 2개월 전 (%)','number','12'],['semiExportM3','반도체 수출 증가율: 1개월 전 (%)','number','8'],['semiExportM4','반도체 수출 증가율: 최신 월 (%)','number','4'],['memoryPriceM1','메모리 가격 변화율: 전월 (%)','number','-2'],['memoryPriceM2','메모리 가격 변화율: 최신 월 (%)','number','-3']]},
+ {name:'③ 한국 커버드콜',desc:'커버드콜은 상승이 제한될 수 있고 하락 손실이 가능합니다.',items:[['kospiDraw','코스피 고점 대비 하락률 (%)','number','25'],['kospiForwardPER','코스피 예상 PER (배)','number','8'],['semiExportM1','반도체 수출 증가율: 3개월 전 (%)','number','15'],['semiExportM2','반도체 수출 증가율: 2개월 전 (%)','number','12'],['semiExportM3','반도체 수출 증가율: 1개월 전 (%)','number','8'],['semiExportM4','반도체 수출 증가율: 최신 월 (%)','number','4'],['memoryPriceM1','DDR5 가격 전월비: 직전 월 (%)','number','-2'],['memoryPriceM2','DDR5 가격 전월비: 최신 월 (%)','number','-3'],['memoryTwoMonthDecline','DDR5·NAND 모두 2개월 연속 하락 여부','bool']]},
  {name:'④ 금',desc:'원·달러 환율 효과를 제거하기 위해 달러 기준 금값을 사용합니다.',items:[['goldDraw','달러 금값 고점 대비 하락률 (%)','number','25'],['cbBuyingMaintained','중앙은행 금 매입 유지','bool'],['fedCutPivot','미국 금리 인하 전환','bool'],['usRatesRising','미국 금리 연속 상승','bool'],['cbBuyingDeclining','중앙은행 금 매입 감소','bool']]},
  {name:'⑥ 현금',desc:'주식이 비싸면 비중을 높이고 15·25·35% 하락 때 분할 투입',items:[['portfolioDraw','전체 투자자산 고점 대비 하락률 (%)','number','15']]}
 ];
@@ -38,7 +38,8 @@ if(state.seedVersion!==SEED_VERSION){
 }
 let view='dashboard',selectedId=state.docs[0]?.id||null,selectedChartCompany='Alphabet',market={data:{},updatedAt:null,meta:{status:'not_loaded',sources:{},issues:[]}};
 if(state.lastMarket&&state.lastMarket.data)market=state.lastMarket;
-const getInputs=()=>({...market.data,...state.manual});
+const marketIsStale=()=>!market.updatedAt||!Number.isFinite(new Date(market.updatedAt).getTime())||(Date.now()-new Date(market.updatedAt).getTime())>9*86400000;
+const getInputs=()=>({...(!marketIsStale()?market.data:{}),...state.manual});
 const evalAll=()=>S.evaluate(getInputs(),state.docs,state.thresholds);
 const save=()=>{try{localStorage.setItem(STORE,JSON.stringify(state));return true}catch(e){toast('저장 공간이 부족하거나 차단됐습니다. JSON 백업을 이용하세요.');console.error(e);return false}};
 let toastTimer=null;function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),4700)}
@@ -56,8 +57,8 @@ function renderDashboard(){
  $('sellCount').textContent=statuses.filter(x=>x.sellSignal===true).length;
  $('unknownCount').textContent=statuses.filter(x=>x.buySignal===null||x.sellSignal===null).length;
  $('docCount').textContent=state.docs.length;$('navDocCount').textContent=state.docs.length;
- $('marketTimeTop').textContent=market.updatedAt?'시세 스냅샷 '+new Date(market.updatedAt).toLocaleDateString('ko-KR'):'자동 시세 미연결';
- $('sourceNotice').querySelector('span:last-child').textContent=market.updatedAt?'자동 시장 데이터와 수동 입력을 조합합니다. '+dateText(market.updatedAt)+' 수집 기준이며, 데이터 종류·가격 고점 기준·결측치를 반드시 확인하세요.':'시장 자동 수집 데이터가 아직 없습니다. 지표 입력에서 직접 기록하거나 GitHub Actions를 배포하세요. 기업 PDF 분석은 별도로 가능합니다.';
+ $('marketTimeTop').textContent=market.updatedAt?('자동 지표 '+new Date(market.updatedAt).toLocaleDateString('ko-KR')+(marketIsStale()?' · 갱신 지연':'')):'자동 시세 미연결';
+ $('sourceNotice').querySelector('span:last-child').textContent=market.updatedAt?(marketIsStale()?'자동 수집 파일이 9일 이상 갱신되지 않았습니다. 오래된 자동 값은 매매 판단에서 제외했습니다. GitHub Actions 실행 상태를 확인하세요.':'Macro Dashboard와 KR Trade Monitor의 공개 데이터로 갱신합니다. '+dateText(market.updatedAt)+' 수집 기준 · 지표마다 최종 관측일과 출처를 확인하세요.'):'시장 자동 수집 데이터가 아직 없습니다. GitHub Actions를 실행하거나 지표를 직접 입력하세요.';
  $('assetGrid').innerHTML=S.ASSETS.map(a=>{
  const v=r.rules[a.id],[text,cls]=sideStatus(v.buySignal,v.sellSignal);
  let extra='';
@@ -72,8 +73,10 @@ function renderDashboard(){
  const doc=x.doc;let sub=doc?`${doc.period} · ${b(doc.quarterCapexM)}`:'분석 기록 없음';let stance=doc?(doc.trend==='expanding'?'실제 지출 확대':doc.trend==='contracting'?'실제 지출 감소':'추세 미확인'):'PDF 필요';
  return `<div class="mini-company"><strong>${esc(x.company)}</strong><div class="desc">${esc(sub)}</div><span class="small-status ${doc?.trend==='expanding'?'up':doc?.trend==='contracting'?'down':''}">${esc(stance)}</span></div>`;
  }).join('')+`<p class="muted-text">※ 실제 CAPEX 증가는 다음 해 투자 계획의 '유지 확정'과 다릅니다.</p>`;
- $('overviewFeeds').innerHTML=`<div class="feed-line"><div><strong>시장 자동 수집</strong><small>GitHub Actions · yfinance</small></div><span class="tag">${market.updatedAt?'마지막 갱신 '+new Date(market.updatedAt).toLocaleDateString('ko-KR'):'미연결'}</span></div><div class="feed-line"><div><strong>Macro Dashboard</strong><small>관련 지수·금리·금 등</small></div><span class="tag">외부 참고</span></div><div class="feed-line"><div><strong>KR Trade Monitor</strong><small>반도체 수출·메모리 가격</small></div><span class="tag">필드 검증 필요</span></div><div class="feed-line"><div><strong>기업 IR PDF</strong><small>브라우저 분석 기록</small></div><span class="tag">${state.docs.length}건</span></div>`;
- $('sidebarUpdated').textContent=market.updatedAt?'자동 시세 기준 '+dateText(market.updatedAt):'자동 시세: 아직 연결되지 않음';
+ const integrations=market.meta?.integrations||{};
+ const feedLine=(name,url,what,key)=>{const feed=integrations[key]||{};const mapped=feed.status==='mapped';const label=mapped?(feed.reportMonth?feed.reportMonth+' 수집':'필드 '+(feed.mappedFields?.length||0)+'개 연결'):(feed.status==='unavailable'?'수집 실패':'첫 실행 대기');return `<div class="feed-line"><div><a href="${url}" target="_blank" rel="noopener"><strong>${name} ↗</strong></a><small>${what}</small></div><span class="tag ${mapped?'tag-ok':'tag-warn'}">${esc(label)}</span></div>`};
+ $('overviewFeeds').innerHTML=feedLine('Macro Dashboard','https://kangdy9801.github.io/macro-dashboard/','S&P500 · 달러 금 · 10년물 국채','macro-dashboard')+feedLine('KR Trade Monitor','https://kangdy9801.github.io/kr-trade-monitor/#s-sectors','반도체 수출 · DDR5 · NAND','kr-trade-monitor')+`<div class="feed-line"><div><strong>AI · 기업 PDF</strong><small>업로드 후 브라우저에서만 분석</small></div><span class="tag">${state.docs.length}건</span></div>`;
+ $('sidebarUpdated').textContent=market.updatedAt?'자동 수집 기준 '+dateText(market.updatedAt)+(marketIsStale()?' · 오래됨':''):'자동 시세: 아직 연결되지 않음';
 }
 function companyAbbr(key){return ({Alphabet:'G',Microsoft:'M',Amazon:'A',Meta:'M'})[key]||'?';}
 function companyCard(row){
@@ -170,7 +173,7 @@ function renderDetail(d){const el=$('reportDetail');if(!d){el.innerHTML='<div cl
  };
  $('deleteReport').onclick=()=>{if(!confirm(`${d.company} ${d.period} 분석 기록을 삭제할까요?`))return;state.docs=state.docs.filter(x=>x.id!==d.id);save();selectedId=state.docs[0]?.id||null;renderAi();renderDashboard();toast('분석 기록을 삭제했습니다.');};
 }
-function renderInputs(){const data=getInputs();$('inputForms').innerHTML=GROUPS.map(g=>`<section class="paper input-group"><h2>${g.name}</h2><p>${g.desc}</p><div class="input-grid">${g.items.map(([key,label,type,placeholder])=>`<div class="field"><label for="input_${key}">${label}${state.manual[key]!==undefined?'<span style="margin-left:5px;color:#4d85bb">· 수동입력</span>':''}</label>${type==='bool'?`<select id="input_${key}" data-key="${key}" data-type="bool"><option value="">미확인</option><option value="true" ${data[key]===true?'selected':''}>예</option><option value="false" ${data[key]===false?'selected':''}>아니요</option></select>`:`<input id="input_${key}" data-key="${key}" data-type="number" type="number" step="any" placeholder="예: ${placeholder||''}" value="${n(data[key])?data[key]:''}">`}${state.manual[key]===undefined&&n(market.data?.[key])?`<small>자동 시세: ${fmt(market.data[key],2)} (수동 입력 시 우선)</small>`:''}</div>`).join('')}</div></section>`).join('');}
+function renderInputs(){const data=getInputs();$('inputForms').innerHTML=GROUPS.map(g=>`<section class="paper input-group"><h2>${g.name}</h2><p>${g.desc}</p><div class="input-grid">${g.items.map(([key,label,type,placeholder])=>`<div class="field"><label for="input_${key}">${label}${state.manual[key]!==undefined?'<span style="margin-left:5px;color:#4d85bb">· 수동입력</span>':''}</label>${type==='bool'?`<select id="input_${key}" data-key="${key}" data-type="bool"><option value="">미확인</option><option value="true" ${data[key]===true?'selected':''}>예</option><option value="false" ${data[key]===false?'selected':''}>아니요</option></select>`:`<input id="input_${key}" data-key="${key}" data-type="number" type="number" step="any" placeholder="예: ${placeholder||''}" value="${n(data[key])?data[key]:''}">`}${state.manual[key]===undefined&&!marketIsStale()&&(n(market.data?.[key])||typeof market.data?.[key]==='boolean')?`<small class="auto-hint">● 자동: ${typeof market.data[key]==='boolean'?(market.data[key]?'예':'아니요'):fmt(market.data[key],2)} · ${esc(market.meta?.sources?.[key]?.marketDate||market.meta?.sources?.[key]?.reportMonth||'')} (수동 입력 시 우선)</small>`:''}</div>`).join('')}</div></section>`).join('');}
 function saveInputs(){let next={};document.querySelectorAll('[data-key]').forEach(el=>{
  const key=el.dataset.key,v=el.value;const auto=market.data?.[key];
  if(v===''){if(auto!==undefined)next[key]=null;return;}
@@ -186,8 +189,14 @@ function renderRules(){const rules=[
  ['⑥ 현금','주식 이익수익률이 국채에 비해 낮아지면 현금을 확보합니다. 투자자산 전체가 고점 대비 15%·25%·35% 하락하면 나눠서 투입을 검토합니다.','15% → 25% → 35% 단계적 투입']
  ];$('principles').innerHTML=rules.map(r=>`<div class="principle"><h3>${r[0]}</h3><p>${esc(r[1])}</p><span class="strategy-tag">${esc(r[2])}</span></div>`).join('');
  $('thresholdInputs').innerHTML=TH_GROUP.map(([key,label])=>`<div class="field"><label for="th_${key}">${label}</label><input id="th_${key}" type="number" step="any" value="${state.thresholds[key]}"></div>`).join('');}
-function renderSettings(){const sources=market.meta?.sources||{},issues=market.meta?.issues||[];
- $('feedDetails').innerHTML=`<b>마지막 수집:</b> ${dateText(market.updatedAt)}<br><b>지표:</b> ${Object.keys(sources).length}개 수집 표시<br><b>수집 오류:</b> ${issues.length}개<br><b>원본:</b> data.json (자동 시장 값)${issues.length?`<br><b>주의:</b> ${esc(issues.slice(0,3).join(' | '))}`:''}`;}
+function renderSettings(){const sources=market.meta?.sources||{},issues=market.meta?.issues||[],integrations=market.meta?.integrations||{};
+ const mapStatus=(key,caption)=>{const item=integrations[key]||{};return `<div class="source-block"><strong>${caption}</strong><span class="tag ${item.status==='mapped'?'tag-ok':'tag-warn'}">${item.status==='mapped'?'수치 자동 연결':item.status==='unavailable'?'수집 오류':'수집 전'}</span><small>${item.reportMonth?'기준월 '+esc(item.reportMonth)+' · ':''}자동 매핑 ${item.mappedFields?.length||0}개 항목 ${item.issue?'· '+esc(item.issue):''}</small></div>`};
+ const available=Object.entries(sources).filter(([key])=>!marketIsStale()&&market.data?.[key]!==undefined&&market.data?.[key]!==null);
+ $('feedDetails').innerHTML=`<b>마지막 수집:</b> ${esc(dateText(market.updatedAt))}<br><b>정상 자동 매핑:</b> ${available.length}개<br><b>수집 오류/누락:</b> ${issues.length}건<br><b>파일:</b> data.json${marketIsStale()?'<p class="data-warning">갱신이 9일 이상 지연돼 자동 입력값의 투자판정을 중지했습니다.</p>':''}<div class="source-blocks">${mapStatus('macro-dashboard','Macro Dashboard')}${mapStatus('kr-trade-monitor','KR Trade Monitor')}</div>${issues.length?`<details class="source-errors"><summary>수집 로그 ${issues.length}건 펼치기</summary><ul>${issues.slice(0,15).map(e=>`<li>${esc(e)}</li>`).join('')}</ul></details>`:''}`;
+ const label={spDraw:'S&P500 낙폭',goldDraw:'달러 금 낙폭',treasuryYield:'미국 10년물 국채',aiDraw:'AIQ 낙폭',kospiDraw:'코스피 낙폭',semiExportM1:'반도체 수출 YoY (첫 달)',semiExportM2:'반도체 수출 YoY (둘째 달)',semiExportM3:'반도체 수출 YoY (셋째 달)',semiExportM4:'반도체 수출 YoY (최신 달)',memoryPriceM1:'DDR5 직전 월 MoM',memoryPriceM2:'DDR5 최신 월 MoM',memoryTwoMonthDecline:'DDR5·NAND 2개월 연속 동반 하락'};
+ const table=Object.entries(sources).filter(([k])=>label[k]).map(([k,v])=>`<tr><th>${esc(label[k])}</th><td><b>${typeof getInputs()[k]==='boolean'?(getInputs()[k]?'예':'아니요'):n(getInputs()[k])?fmt(getInputs()[k],2)+(k==='treasuryYield'?'%':'%'):'미반영'}</b></td><td>${esc(v.reportMonth||v.marketDate||'—')}</td><td>${esc(v.provider||'—')}</td></tr>`).join('');
+ const holder=$('autoSourceMetrics');if(holder)holder.innerHTML=table?`<div class="method-scroll"><table class="method-table"><thead><tr><th>자동 지표</th><th>수치</th><th>관측 기준</th><th>제공자</th></tr></thead><tbody>${table}</tbody></table></div>`:'자동으로 매핑된 지표가 없습니다. GitHub Actions 실행 후 다시 확인하세요.';
+}
 async function fetchMarket(silent=false){if(!/^https?:$/.test(location.protocol)){if(!silent)toast('로컬 파일 모드에서는 자동 시세 URL을 읽을 수 없습니다. 로컬 서버 또는 GitHub Pages에서 확인하세요.');return;}
  try{const url=new URL('data.json',location.href);url.searchParams.set('_',Date.now());
  const resp=await fetch(url,{cache:'no-store'});if(!resp.ok)throw Error('HTTP '+resp.status);const raw=await resp.json();if(!raw||!raw.data||typeof raw.data!=='object')throw Error('data.json 형식 오류');
@@ -274,6 +283,8 @@ function wire(){
 }
 function init(){const now=new Date();$('todayText').textContent=now.toLocaleDateString('ko-KR',{year:'numeric',month:'short',day:'numeric',weekday:'short'});
  wire();renderDashboard();renderAi();renderRules();renderInputs();renderSettings();fetchMarket(true);
+ setInterval(()=>{if(document.visibilityState==='visible'&&/^https?:$/.test(location.protocol))fetchMarket(true)},30*60*1000);
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')fetchMarket(true)});
 }
 init();
 })();

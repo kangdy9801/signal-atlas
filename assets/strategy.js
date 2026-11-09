@@ -51,12 +51,12 @@ function evaluate(data={},docs=[],thresholds={},now=new Date()){
  const spread=number(d.earningsYield)&&number(d.treasuryYield)?d.earningsYield-d.treasuryYield:null;
  const ex=[d.semiExportM1,d.semiExportM2,d.semiExportM3,d.semiExportM4];
  const semislow=ex.every(number)?ex.slice(1).every((v,i)=>v<ex[i]):null;
- const memfall=number(d.memoryPriceM1)&&number(d.memoryPriceM2)?d.memoryPriceM1<0&&d.memoryPriceM2<0:null;
+ const memfall=typeof d.memoryTwoMonthDecline==='boolean'?d.memoryTwoMonthDecline:(number(d.memoryPriceM1)&&number(d.memoryPriceM2)?d.memoryPriceM1<0&&d.memoryPriceM2<0:null);
  const stages=[t.cash1,t.cash2,t.cash3].map((v,i)=>({level:i+1,draw:v,passed:ge(d.portfolioDraw,v)}));
  const rules={
   sp:{buy:[item(`고점 대비 ${t.spDraw}% 이상 하락`,ge(d.spDraw,t.spDraw)),item(`주식 예상 이익수익률 − 미국 국채 금리 ≥ ${t.spSpreadBuy}%p`,ge(spread,t.spSpreadBuy))],sell:[item(`이익수익률 − 국채금리 ≤ ${t.spSpreadSell}%p`,le(spread,t.spSpreadSell))]},
   ai:{buy:[item(`AI 주식 바스켓 고점 대비 ${t.aiDraw}% 이상 하락`,ge(d.aiDraw,t.aiDraw)),item(`4대 기업의 차기년도 AI·CAPEX 투자 유지 확인`,capex.maintained)],sell:[item(`4대 기업 중 ${t.capexCuts}곳 이상 차기년도 CAPEX 축소 확인 (검증 완료 ${capex.cuts}곳)`,capex.cuts>=t.capexCuts?true:capex.known===4?false:null)]},
-  kr:{buy:[item(`코스피 고점 대비 ${t.kospiDraw}% 이상 하락`,ge(d.kospiDraw,t.kospiDraw)),item(`코스피 예상 PER ≤ ${t.kospiPER}배`,le(d.kospiForwardPER,t.kospiPER))],sell:[item('반도체 수출 증가율 3회 연속 둔화',semislow),item('메모리 가격 전월비 2개월 연속 하락',memfall)]},
+  kr:{buy:[item(`코스피 고점 대비 ${t.kospiDraw}% 이상 하락`,ge(d.kospiDraw,t.kospiDraw)),item(`코스피 예상 PER ≤ ${t.kospiPER}배`,le(d.kospiForwardPER,t.kospiPER))],sell:[item('반도체 수출 증가율 3회 연속 둔화',semislow),item('DDR5·NAND 가격 각각 2개월 연속 하락 (공개 보도자료 기준)',memfall)]},
   gold:{buy:[item(`달러 금값 고점 대비 ${t.goldDraw}% 이상 하락`,ge(d.goldDraw,t.goldDraw)),item('중앙은행 매입 유지 또는 미국 금리 인하 전환',or(boolean(d.cbBuyingMaintained),boolean(d.fedCutPivot)))],sell:[item('미국 금리 지속 상승',boolean(d.usRatesRising)),item('중앙은행 금 매입 감소',boolean(d.cbBuyingDeclining))]},
   cash:{buy:[item(`투자자산 전체 고점 대비 ${t.cash1}% 이상 하락 (1차 현금 투입 검토)`,ge(d.portfolioDraw,t.cash1))],sell:[item(`이익수익률 − 국채금리 ≤ ${t.spSpreadSell}%p (현금 확보 검토)`,le(spread,t.spSpreadSell))]}
  };
