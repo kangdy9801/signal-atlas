@@ -40,7 +40,8 @@ jobs:
           node tests/test-strategy.js
           node tests/test-q3-filings.js
           python tests/test-collector.py
-      - name: Sync publicly published Macro Dashboard and KR Trade Monitor records
+          python tests/test-extra.py
+      - name: Sync Macro Dashboard, KR Trade Monitor, FactSet, FRED and WGC
         run: python collect.py
       - name: Commit refreshed public snapshot
         run: |
