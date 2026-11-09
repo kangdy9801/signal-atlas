@@ -1,20 +1,20 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-11-09T04:51:53.085116+00:00",
   "data": {
-    "spDraw": null,
+    "spDraw": 5.654,
     "earningsYield": null,
-    "treasuryYield": null,
-    "aiDraw": null,
-    "kospiDraw": null,
+    "treasuryYield": 4.86,
+    "aiDraw": 18.891,
+    "kospiDraw": 43.964,
     "kospiForwardPER": null,
-    "semiExportM1": null,
-    "semiExportM2": null,
-    "semiExportM3": null,
-    "semiExportM4": null,
-    "memoryPriceM1": null,
-    "memoryPriceM2": null,
-    "memoryTwoMonthDecline": null,
-    "goldDraw": null,
+    "semiExportM1": 178.8,
+    "semiExportM2": 209.0,
+    "semiExportM3": 262.8,
+    "semiExportM4": 259.4,
+    "memoryPriceM1": 3.226,
+    "memoryPriceM2": 4.167,
+    "memoryTwoMonthDecline": false,
+    "goldDraw": 25.05,
     "cbBuyingMaintained": null,
     "fedCutPivot": null,
     "usRatesRising": null,
@@ -22,13 +22,159 @@
     "portfolioDraw": null
   },
   "meta": {
-    "status": "not_collected",
-    "sources": {},
-    "integrations": {},
+    "status": "partial",
+    "sources": {
+      "spDraw": {
+        "provider": "Macro Dashboard",
+        "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
+        "marketDate": "2026-11-06",
+        "definition": "spx USD close; drawdown from highest closing price in trailing 365 days",
+        "currentClose": 7376.8599,
+        "peakClose": 7818.9302,
+        "originalSource": "Yahoo Finance ^GSPC",
+        "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
+      },
+      "goldDraw": {
+        "provider": "Macro Dashboard",
+        "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
+        "marketDate": "2026-11-08",
+        "definition": "gold USD close; drawdown from highest closing price in trailing 365 days",
+        "currentClose": 4128.7002,
+        "peakClose": 5508.6001,
+        "originalSource": "Yahoo Finance GCZ26.CMX",
+        "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
+      },
+      "treasuryYield": {
+        "provider": "Macro Dashboard",
+        "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
+        "marketDate": "2026-11-06",
+        "definition": "US 10-year Treasury constant maturity yield, percentage points",
+        "originalSource": "미국 재무부 10 Yr",
+        "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
+      },
+      "semiExportM1": {
+        "provider": "KR Trade Monitor",
+        "url": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js",
+        "reportMonth": "2026-10",
+        "definition": "Semiconductor export YoY growth: window observation 1/4 (oldest to newest), %",
+        "feedUrl": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js"
+      },
+      "semiExportM2": {
+        "provider": "KR Trade Monitor",
+        "url": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js",
+        "reportMonth": "2026-10",
+        "definition": "Semiconductor export YoY growth: window observation 2/4 (oldest to newest), %",
+        "feedUrl": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js"
+      },
+      "semiExportM3": {
+        "provider": "KR Trade Monitor",
+        "url": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js",
+        "reportMonth": "2026-10",
+        "definition": "Semiconductor export YoY growth: window observation 3/4 (oldest to newest), %",
+        "feedUrl": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js"
+      },
+      "semiExportM4": {
+        "provider": "KR Trade Monitor",
+        "url": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js",
+        "reportMonth": "2026-10",
+        "definition": "Semiconductor export YoY growth: window observation 4/4 (oldest to newest), %",
+        "feedUrl": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js"
+      },
+      "memoryPriceM1": {
+        "provider": "KR Trade Monitor",
+        "url": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js",
+        "reportMonth": "2026-10",
+        "definition": "DDR5 16Gb fixed price month-on-month growth (%) — previous month",
+        "feedUrl": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js"
+      },
+      "memoryPriceM2": {
+        "provider": "KR Trade Monitor",
+        "url": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js",
+        "reportMonth": "2026-10",
+        "definition": "DDR5 16Gb fixed price month-on-month growth (%) — latest month",
+        "feedUrl": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js"
+      },
+      "memoryTwoMonthDecline": {
+        "provider": "KR Trade Monitor",
+        "url": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js",
+        "reportMonth": "2026-10",
+        "definition": "Both DDR5 16Gb and NAND 128Gb fixed prices declined in each of last 2 months",
+        "ddr5Mom": [
+          3.226,
+          4.167
+        ],
+        "nandMom": [
+          0.328,
+          0.0
+        ],
+        "feedUrl": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js"
+      },
+      "aiDraw": {
+        "provider": "Yahoo Finance / yfinance",
+        "ticker": "AIQ",
+        "marketDate": "2026-11-06",
+        "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
+        "currentClose": 56.89,
+        "peakClose": 70.14
+      },
+      "kospiDraw": {
+        "provider": "Yahoo Finance / yfinance",
+        "ticker": "^KS11",
+        "marketDate": "2026-11-09",
+        "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
+        "currentClose": 5107.4502,
+        "peakClose": 9114.5498
+      }
+    },
     "issues": [],
+    "integrations": {
+      "macro-dashboard": {
+        "status": "mapped",
+        "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
+        "sourceUpdated": "2026-11-09T04:30+00:00",
+        "availableSeries": [
+          "dxy",
+          "fng",
+          "gold",
+          "move",
+          "ndx",
+          "spx",
+          "us10y",
+          "us3y",
+          "vix",
+          "vkospi",
+          "wti"
+        ],
+        "mappedFields": [
+          "goldDraw",
+          "spDraw",
+          "treasuryYield"
+        ]
+      },
+      "kr-trade-monitor": {
+        "status": "mapped",
+        "url": "https://raw.githubusercontent.com/kangdy9801/kr-trade-monitor/main/assets/seed.js",
+        "reportMonth": "2026-10",
+        "recordCount": 2,
+        "mappedFields": [
+          "memoryPriceM1",
+          "memoryPriceM2",
+          "memoryTwoMonthDecline",
+          "semiExportM1",
+          "semiExportM2",
+          "semiExportM3",
+          "semiExportM4"
+        ],
+        "note": "Only published seed.js records are available. Browser-only uploads in the upstream dashboard are NOT included."
+      }
+    },
     "notes": [
-      "To populate source-backed numbers, run the included GitHub Actions workflow.",
-      "Missing source data must remain unknown; browser uploads to KR Trade Monitor are not in upstream public seed.js until published."
+      "S&P500 and gold futures are USD price histories (1-year closing high, not lifetime high).",
+      "Gold futures contract rolls can affect the drawdown series.",
+      "KR exports and fixed memory prices use the latest published upstream seed.js; local-only PDFs are not visible.",
+      "Two-month memory decline requires both DDR5 and NAND to decline in BOTH months.",
+      "Forward stock earnings yield, KOSPI forward PER, central-bank gold purchases and portfolio NAV remain unverified; no invented values.",
+      "No Telegram notifications and no investment transactions."
     ]
   }
 }
