@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-11-09T04:51:53.085116+00:00",
+  "updatedAt": "2026-11-09T06:36:49.479408+00:00",
   "data": {
     "spDraw": 5.654,
-    "earningsYield": null,
+    "earningsYield": 5.632,
     "treasuryYield": 4.86,
     "aiDraw": 18.891,
-    "kospiDraw": 43.964,
+    "kospiDraw": 44.863,
     "kospiForwardPER": null,
     "semiExportM1": 178.8,
     "semiExportM2": 209.0,
@@ -14,9 +14,10 @@
     "memoryPriceM1": 3.226,
     "memoryPriceM2": 4.167,
     "memoryTwoMonthDecline": false,
-    "goldDraw": 25.05,
+    "goldDraw": 24.966,
     "cbBuyingMaintained": null,
-    "fedCutPivot": null,
+    "fedCutPivot": false,
+    "fedCutCount": 0,
     "usRatesRising": null,
     "cbBuyingDeclining": null,
     "portfolioDraw": null
@@ -37,9 +38,9 @@
       "goldDraw": {
         "provider": "Macro Dashboard",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "marketDate": "2026-11-08",
+        "marketDate": "2026-11-09",
         "definition": "gold USD close; drawdown from highest closing price in trailing 365 days",
-        "currentClose": 4128.7002,
+        "currentClose": 4133.2998,
         "peakClose": 5508.6001,
         "originalSource": "Yahoo Finance GCZ26.CMX",
         "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
@@ -122,16 +123,50 @@
         "ticker": "^KS11",
         "marketDate": "2026-11-09",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 5107.4502,
+        "currentClose": 5025.5098,
         "peakClose": 9114.5498
+      },
+      "earningsYield": {
+        "provider": "FactSet Earnings Insight",
+        "url": "https://advantage.factset.com/hubfs/Website/Resources%20Section/Research%20Desk/Earnings%20Insight/EarningsInsight_110626.pdf",
+        "marketDate": "2026-11-06",
+        "forwardPE": 17.7,
+        "reportClose": 7353.73,
+        "impliedForwardEPS": 415.46,
+        "spxClose": 7376.8599,
+        "definition": "Forward 12M EPS implied by FactSet (report close / forward P/E) divided by latest S&P500 close"
+      },
+      "fedCutPivot": {
+        "provider": "FRED (St. Louis Fed)",
+        "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU",
+        "marketDate": "2026-11-08",
+        "definition": "Cuts to the fed funds target upper bound since the most recent hike. 1 = watch, 2+ = pivot",
+        "targetUpper": 4.0,
+        "lastHike": "2026-09-17",
+        "cutsSinceLastHike": 0,
+        "recentCuts": [],
+        "stage": "none"
+      },
+      "fedCutCount": {
+        "provider": "FRED (St. Louis Fed)",
+        "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU",
+        "marketDate": "2026-11-08",
+        "definition": "Cuts to the fed funds target upper bound since the most recent hike. 1 = watch, 2+ = pivot",
+        "targetUpper": 4.0,
+        "lastHike": "2026-09-17",
+        "cutsSinceLastHike": 0,
+        "recentCuts": [],
+        "stage": "none"
       }
     },
-    "issues": [],
+    "issues": [
+      "wgc: no recent WGC central bank quarter (Q3 2026: quarterly net purchase sentence not found; Q2 2026: quarterly net purchase sentence not found)"
+    ],
     "integrations": {
       "macro-dashboard": {
         "status": "mapped",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "sourceUpdated": "2026-11-09T04:30+00:00",
+        "sourceUpdated": "2026-11-09T06:07+00:00",
         "availableSeries": [
           "dxy",
           "fng",
@@ -166,6 +201,24 @@
           "semiExportM4"
         ],
         "note": "Only published seed.js records are available. Browser-only uploads in the upstream dashboard are NOT included."
+      },
+      "factset": {
+        "status": "mapped",
+        "reportDate": "2026-11-06",
+        "mappedFields": [
+          "earningsYield"
+        ]
+      },
+      "fred": {
+        "status": "mapped",
+        "mappedFields": [
+          "fedCutCount",
+          "fedCutPivot"
+        ]
+      },
+      "wgc": {
+        "status": "unavailable",
+        "issue": "no recent WGC central bank quarter (Q3 2026: quarterly net purchase sentence not found; Q2 2026: quarterly net purchase sentence not found)"
       }
     },
     "notes": [
@@ -173,7 +226,10 @@
       "Gold futures contract rolls can affect the drawdown series.",
       "KR exports and fixed memory prices use the latest published upstream seed.js; local-only PDFs are not visible.",
       "Two-month memory decline requires both DDR5 and NAND to decline in BOTH months.",
-      "Forward stock earnings yield, KOSPI forward PER, central-bank gold purchases and portfolio NAV remain unverified; no invented values.",
+      "S&P500 earnings yield = FactSet forward 12M EPS (report close / forward P/E) / latest S&P500 close.",
+      "Fed pivot: cuts since last hike. 1 cut = watch only, 2+ cuts = pivot (FRED DFEDTARU).",
+      "Central bank gold: latest WGC quarter vs. same quarter a year earlier.",
+      "KOSPI forward PER, US rates rising and portfolio NAV remain manual; no invented values.",
       "No Telegram notifications and no investment transactions."
     ]
   }
