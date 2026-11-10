@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-11-10T08:35:36.986130+00:00",
+  "updatedAt": "2026-11-10T18:03:24.469143+00:00",
   "data": {
     "spDraw": 3.44,
     "earningsYield": 5.503,
     "treasuryYield": 4.88,
-    "aiDraw": 16.21,
-    "kospiDraw": 42.519,
+    "aiDraw": 17.579,
+    "kospiDraw": 44.936,
     "kospiForwardPER": null,
     "semiExportM1": 178.8,
     "semiExportM2": 209.0,
@@ -113,17 +113,17 @@
       "aiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "AIQ",
-        "marketDate": "2026-11-09",
+        "marketDate": "2026-11-10",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 58.77,
+        "currentClose": 57.81,
         "peakClose": 70.14
       },
       "kospiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "^KS11",
-        "marketDate": "2026-11-10",
+        "marketDate": "2026-11-09",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 5239.1299,
+        "currentClose": 5018.8501,
         "peakClose": 9114.5498
       },
       "earningsYield": {
@@ -139,7 +139,7 @@
       "fedCutPivot": {
         "provider": "FRED (St. Louis Fed)",
         "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU",
-        "marketDate": "2026-11-09",
+        "marketDate": "2026-11-10",
         "definition": "Cuts to the fed funds target upper bound since the most recent hike. 1 = watch, 2+ = pivot",
         "targetUpper": 4.0,
         "lastHike": "2026-09-17",
@@ -150,7 +150,7 @@
       "fedCutCount": {
         "provider": "FRED (St. Louis Fed)",
         "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU",
-        "marketDate": "2026-11-09",
+        "marketDate": "2026-11-10",
         "definition": "Cuts to the fed funds target upper bound since the most recent hike. 1 = watch, 2+ = pivot",
         "targetUpper": 4.0,
         "lastHike": "2026-09-17",
