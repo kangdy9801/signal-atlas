@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-11-13T08:20:46.804156+00:00",
+  "updatedAt": "2026-11-13T17:57:12.372873+00:00",
   "data": {
     "spDraw": 2.897,
-    "earningsYield": 5.472,
+    "earningsYield": 5.464,
     "treasuryYield": 5.1,
-    "aiDraw": 15.184,
-    "kospiDraw": 41.955,
+    "aiDraw": 16.624,
+    "kospiDraw": 41.382,
     "kospiForwardPER": null,
     "semiExportM1": 178.8,
     "semiExportM2": 209.0,
@@ -113,33 +113,33 @@
       "aiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "AIQ",
-        "marketDate": "2026-11-12",
+        "marketDate": "2026-11-13",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 59.49,
+        "currentClose": 58.48,
         "peakClose": 70.14
       },
       "kospiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "^KS11",
-        "marketDate": "2026-11-13",
+        "marketDate": "2026-11-12",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 5290.5298,
+        "currentClose": 5342.73,
         "peakClose": 9114.5498
       },
       "earningsYield": {
         "provider": "FactSet Earnings Insight",
-        "url": "https://advantage.factset.com/hubfs/Website/Resources%20Section/Research%20Desk/Earnings%20Insight/EarningsInsight_110626.pdf",
+        "url": "https://advantage.factset.com/hubfs/Website/Resources%20Section/Research%20Desk/Earnings%20Insight/EarningsInsight_111326.pdf",
         "marketDate": "2026-11-12",
-        "forwardPE": 17.7,
-        "reportClose": 7353.73,
-        "impliedForwardEPS": 415.46,
+        "forwardPE": 18.3,
+        "reportClose": 7592.4,
+        "impliedForwardEPS": 414.89,
         "spxClose": 7592.3999,
         "definition": "Forward 12M EPS implied by FactSet (report close / forward P/E) divided by latest S&P500 close"
       },
       "fedCutPivot": {
         "provider": "FRED (St. Louis Fed)",
         "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU",
-        "marketDate": "2026-11-12",
+        "marketDate": "2026-11-13",
         "definition": "Cuts to the fed funds target upper bound since the most recent hike. 1 = watch, 2+ = pivot",
         "targetUpper": 4.0,
         "lastHike": "2026-09-17",
@@ -150,7 +150,7 @@
       "fedCutCount": {
         "provider": "FRED (St. Louis Fed)",
         "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU",
-        "marketDate": "2026-11-12",
+        "marketDate": "2026-11-13",
         "definition": "Cuts to the fed funds target upper bound since the most recent hike. 1 = watch, 2+ = pivot",
         "targetUpper": 4.0,
         "lastHike": "2026-09-17",
@@ -204,7 +204,7 @@
       },
       "factset": {
         "status": "mapped",
-        "reportDate": "2026-11-06",
+        "reportDate": "2026-11-13",
         "mappedFields": [
           "earningsYield"
         ]
