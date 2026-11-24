@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-11-24T11:16:00.030987+00:00",
+  "updatedAt": "2026-11-24T20:45:01.248114+00:00",
   "data": {
     "spDraw": 7.44,
     "earningsYield": 5.798,
     "treasuryYield": 4.92,
-    "aiDraw": 21.756,
-    "kospiDraw": 45.076,
+    "aiDraw": 23.631,
+    "kospiDraw": 48.34,
     "kospiForwardPER": null,
     "semiExportM1": 178.8,
     "semiExportM2": 209.0,
@@ -113,17 +113,17 @@
       "aiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "AIQ",
-        "marketDate": "2026-11-23",
+        "marketDate": "2026-11-24",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 54.88,
+        "currentClose": 53.565,
         "peakClose": 70.14
       },
       "kospiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "^KS11",
-        "marketDate": "2026-11-24",
+        "marketDate": "2026-11-23",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 5006.0298,
+        "currentClose": 4708.54,
         "peakClose": 9114.5498
       },
       "earningsYield": {
@@ -139,7 +139,7 @@
       "fedCutPivot": {
         "provider": "FRED (St. Louis Fed)",
         "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU",
-        "marketDate": "2026-11-23",
+        "marketDate": "2026-11-24",
         "definition": "Cuts to the fed funds target upper bound since the most recent hike. 1 = watch, 2+ = pivot",
         "targetUpper": 4.0,
         "lastHike": "2026-09-17",
@@ -150,7 +150,7 @@
       "fedCutCount": {
         "provider": "FRED (St. Louis Fed)",
         "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU",
-        "marketDate": "2026-11-23",
+        "marketDate": "2026-11-24",
         "definition": "Cuts to the fed funds target upper bound since the most recent hike. 1 = watch, 2+ = pivot",
         "targetUpper": 4.0,
         "lastHike": "2026-09-17",
