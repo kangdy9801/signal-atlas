@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-11-23T22:08:48.503650+00:00",
+  "updatedAt": "2026-11-24T11:16:00.030987+00:00",
   "data": {
-    "spDraw": 11.62,
-    "earningsYield": 6.073,
+    "spDraw": 7.44,
+    "earningsYield": 5.798,
     "treasuryYield": 4.92,
     "aiDraw": 21.756,
-    "kospiDraw": 46.569,
+    "kospiDraw": 45.076,
     "kospiForwardPER": null,
     "semiExportM1": 178.8,
     "semiExportM2": 209.0,
@@ -14,7 +14,7 @@
     "memoryPriceM1": 3.226,
     "memoryPriceM2": 4.167,
     "memoryTwoMonthDecline": false,
-    "goldDraw": 34.197,
+    "goldDraw": 34.305,
     "cbBuyingMaintained": null,
     "fedCutPivot": false,
     "fedCutCount": 0,
@@ -28,9 +28,9 @@
       "spDraw": {
         "provider": "Macro Dashboard",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "marketDate": "2026-11-20",
+        "marketDate": "2026-11-23",
         "definition": "spx USD close; drawdown from highest closing price in trailing 365 days",
-        "currentClose": 6910.3901,
+        "currentClose": 7237.1699,
         "peakClose": 7818.9302,
         "originalSource": "Yahoo Finance ^GSPC",
         "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
@@ -38,9 +38,9 @@
       "goldDraw": {
         "provider": "Macro Dashboard",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "marketDate": "2026-11-23",
+        "marketDate": "2026-11-24",
         "definition": "gold USD close; drawdown from highest closing price in trailing 365 days",
-        "currentClose": 3624.8,
+        "currentClose": 3618.8999,
         "peakClose": 5508.6001,
         "originalSource": "Yahoo Finance GCZ26.CMX",
         "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
@@ -48,7 +48,7 @@
       "treasuryYield": {
         "provider": "Macro Dashboard",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "marketDate": "2026-11-20",
+        "marketDate": "2026-11-23",
         "definition": "US 10-year Treasury constant maturity yield, percentage points",
         "originalSource": "미국 재무부 10 Yr",
         "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
@@ -121,19 +121,19 @@
       "kospiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "^KS11",
-        "marketDate": "2026-11-20",
+        "marketDate": "2026-11-24",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 4869.96,
+        "currentClose": 5006.0298,
         "peakClose": 9114.5498
       },
       "earningsYield": {
         "provider": "FactSet Earnings Insight",
         "url": "https://advantage.factset.com/hubfs/Website/Resources%20Section/Research%20Desk/Earnings%20Insight/EarningsInsight_112026.pdf",
-        "marketDate": "2026-11-20",
+        "marketDate": "2026-11-23",
         "forwardPE": 17.1,
         "reportClose": 7175.83,
         "impliedForwardEPS": 419.64,
-        "spxClose": 6910.3901,
+        "spxClose": 7237.1699,
         "definition": "Forward 12M EPS implied by FactSet (report close / forward P/E) divided by latest S&P500 close"
       },
       "fedCutPivot": {
@@ -166,7 +166,7 @@
       "macro-dashboard": {
         "status": "mapped",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "sourceUpdated": "2026-11-23T08:00+00:00",
+        "sourceUpdated": "2026-11-24T10:14+00:00",
         "availableSeries": [
           "dxy",
           "fng",
