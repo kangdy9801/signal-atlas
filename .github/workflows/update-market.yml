@@ -8,28 +8,26 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: signal-atlas-v4-publish
   cancel-in-progress: false
 
 jobs:
-  collect-and-publish:
+  # 1) 수집 + 테스트 + 커밋 + Pages 아티팩트 업로드
+  collect-and-build:
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: pip
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '22'
       - name: Install fallback price provider
@@ -59,10 +57,25 @@ jobs:
           cp index.html data.json public/
           cp assets/*.js assets/*.css public/assets/
           touch public/.nojekyll
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: public
+
+  # 2) 배포는 별도 job으로 분리.
+  #    같은 job에서 업로드 직후 바로 deploy-pages를 돌리면, 아티팩트 목록 API가
+  #    아직 방금 올린 github-pages 아티팩트를 보여주지 않아 "Found 0 artifact(s)"로 실패할 수 있음.
+  deploy:
+    needs: collect-and-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
