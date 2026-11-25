@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-11-25T01:58:15.960097+00:00",
+  "updatedAt": "2026-11-25T10:00:50.526589+00:00",
   "data": {
-    "spDraw": 7.44,
-    "earningsYield": 5.798,
-    "treasuryYield": 4.92,
-    "aiDraw": 21.756,
-    "kospiDraw": 47.332,
+    "spDraw": 7.902,
+    "earningsYield": 5.827,
+    "treasuryYield": 4.91,
+    "aiDraw": 23.382,
+    "kospiDraw": 48.461,
     "kospiForwardPER": null,
     "semiExportM1": 178.8,
     "semiExportM2": 209.0,
@@ -14,7 +14,7 @@
     "memoryPriceM1": 3.226,
     "memoryPriceM2": 4.167,
     "memoryTwoMonthDecline": false,
-    "goldDraw": 34.305,
+    "goldDraw": 35.831,
     "cbBuyingMaintained": null,
     "fedCutPivot": false,
     "fedCutCount": 0,
@@ -28,9 +28,9 @@
       "spDraw": {
         "provider": "Macro Dashboard",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "marketDate": "2026-11-23",
+        "marketDate": "2026-11-24",
         "definition": "spx USD close; drawdown from highest closing price in trailing 365 days",
-        "currentClose": 7237.1699,
+        "currentClose": 7201.0898,
         "peakClose": 7818.9302,
         "originalSource": "Yahoo Finance ^GSPC",
         "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
@@ -38,9 +38,9 @@
       "goldDraw": {
         "provider": "Macro Dashboard",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "marketDate": "2026-11-24",
+        "marketDate": "2026-11-25",
         "definition": "gold USD close; drawdown from highest closing price in trailing 365 days",
-        "currentClose": 3618.8999,
+        "currentClose": 3534.8,
         "peakClose": 5508.6001,
         "originalSource": "Yahoo Finance GCZ26.CMX",
         "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
@@ -48,7 +48,7 @@
       "treasuryYield": {
         "provider": "Macro Dashboard",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "marketDate": "2026-11-23",
+        "marketDate": "2026-11-24",
         "definition": "US 10-year Treasury constant maturity yield, percentage points",
         "originalSource": "미국 재무부 10 Yr",
         "feedUrl": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json"
@@ -113,9 +113,9 @@
       "aiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "AIQ",
-        "marketDate": "2026-11-23",
+        "marketDate": "2026-11-24",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 54.88,
+        "currentClose": 53.74,
         "peakClose": 70.14
       },
       "kospiDraw": {
@@ -123,17 +123,17 @@
         "ticker": "^KS11",
         "marketDate": "2026-11-25",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 4800.46,
+        "currentClose": 4697.5098,
         "peakClose": 9114.5498
       },
       "earningsYield": {
         "provider": "FactSet Earnings Insight",
         "url": "https://advantage.factset.com/hubfs/Website/Resources%20Section/Research%20Desk/Earnings%20Insight/EarningsInsight_112026.pdf",
-        "marketDate": "2026-11-23",
+        "marketDate": "2026-11-24",
         "forwardPE": 17.1,
         "reportClose": 7175.83,
         "impliedForwardEPS": 419.64,
-        "spxClose": 7237.1699,
+        "spxClose": 7201.0898,
         "definition": "Forward 12M EPS implied by FactSet (report close / forward P/E) divided by latest S&P500 close"
       },
       "fedCutPivot": {
@@ -166,7 +166,7 @@
       "macro-dashboard": {
         "status": "mapped",
         "url": "https://raw.githubusercontent.com/kangdy9801/macro-dashboard/main/data/market.json",
-        "sourceUpdated": "2026-11-24T10:14+00:00",
+        "sourceUpdated": "2026-11-25T09:00+00:00",
         "availableSeries": [
           "dxy",
           "fng",
