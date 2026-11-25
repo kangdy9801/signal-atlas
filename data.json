@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-11-24T20:45:01.248114+00:00",
+  "updatedAt": "2026-11-25T01:58:15.960097+00:00",
   "data": {
     "spDraw": 7.44,
     "earningsYield": 5.798,
     "treasuryYield": 4.92,
-    "aiDraw": 23.631,
-    "kospiDraw": 48.34,
+    "aiDraw": 21.756,
+    "kospiDraw": 47.332,
     "kospiForwardPER": null,
     "semiExportM1": 178.8,
     "semiExportM2": 209.0,
@@ -113,17 +113,17 @@
       "aiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "AIQ",
-        "marketDate": "2026-11-24",
+        "marketDate": "2026-11-23",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 53.565,
+        "currentClose": 54.88,
         "peakClose": 70.14
       },
       "kospiDraw": {
         "provider": "Yahoo Finance / yfinance",
         "ticker": "^KS11",
-        "marketDate": "2026-11-23",
+        "marketDate": "2026-11-25",
         "definition": "Trailing 365-calendar-day highest closing price; index or ETF proxy; dividend-adjusted as provided",
-        "currentClose": 4708.54,
+        "currentClose": 4800.46,
         "peakClose": 9114.5498
       },
       "earningsYield": {
